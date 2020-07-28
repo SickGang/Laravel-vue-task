@@ -37,7 +37,11 @@ class DepartamentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $departament = new Departaments ([
+            'departament_name' => $request->name
+        ]);
+
+        $departament->save();
     }
 
     /**
@@ -60,7 +64,9 @@ class DepartamentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $departaments = Departaments::find($id);
+        $departaments->departament_name = $request->name;
+        $departaments->save();
     }
 
     /**
@@ -71,6 +77,7 @@ class DepartamentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Departaments::find($id)->delete();
+        Workers::where('departaments_id', $id)->delete();
     }
 }
