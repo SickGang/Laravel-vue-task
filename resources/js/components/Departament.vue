@@ -20,7 +20,7 @@
                     <button @click="departament.edit = true" type="button" class="btn btn-primary">
                         <i class="fa fa-pencil"></i>
                     </button>
-                    <button @click="deleteDepartament(departament.id)" type="button" class="btn btn-danger">
+                    <button @click="depot = departament" type="button" class="btn btn-danger">
                         <i class="fa fa-trash-o"></i>
                     </button>
                 </div>
@@ -29,6 +29,8 @@
                     v-if="renderComponent"
                     :departamentId="departament.id"
                     :renderComponent="renderComponent"
+                    @deleteWorkerId="deleteWorker"
+                    @closeModal="closeModal"
                 >
                 </departament-worker>
                 <div class="input-group mt-3">
@@ -45,6 +47,11 @@
                 </div>
             </div>
         </div>
+        <deletemodal
+            v-if="depot"
+            :depat="depot"
+            @deleteDep="deleteDepartament"
+            @close="depot = null" />
     </div>
 </template>
 
@@ -56,10 +63,7 @@
         data() {
             return {
                 departaments: [],
-                departament: {
-                    id: '',
-                    departament_name: ''
-                },
+                depot: null,
                 worker: {
                     worker_name: []
                 },
@@ -72,6 +76,12 @@
             this.getDepartaments()
         },
         methods: {
+            deleteWorker(worker) {
+              this.depot = worker
+            },
+            closeModal() {
+              this.depot = null
+            },
             getDepartaments() {
             axios.get('/api/departaments')
                 .then(response => {
@@ -83,6 +93,7 @@
                 .finally(() => this.loading = false)
             },
             deleteDepartament(id) {
+                this.closeModal()
                 axios.delete(`/api/departaments/${id}`)
                     .then(response => {
                         this.getDepartaments()

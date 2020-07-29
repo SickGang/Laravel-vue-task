@@ -23,7 +23,10 @@
                 <button @click="worker.edit = true" type="button" class="btn btn-primary">
                     <i class="fa fa-pencil"></i>
                 </button>
-                <button @click="deleteWorker(worker.id)" type="button" class="btn btn-danger">
+                <!-- <button @click="deleteWorker(worker.id)" type="button" class="btn btn-danger">
+                    <i class="fa fa-trash-o"></i>
+                </button> -->
+                <button @click="$emit('deleteWorkerId', worker)" type="button" class="btn btn-danger">
                     <i class="fa fa-trash-o"></i>
                 </button>
             </div>
@@ -38,11 +41,6 @@
         data() {
             return {
                 workers: [],
-                worker: {
-                    id: '',
-                    worker_name: '',
-                    departamentd_id: ''
-                },
                 loading: true,
                 edit: false
             }
@@ -66,6 +64,7 @@
                         .finally(() => this.loading = false)
             },
             deleteWorker(id) {
+                this.$emit('closeModal')
                 axios.delete(`/api/workers/${id}`)
                     .then(response => {
                         this.$emit('render')

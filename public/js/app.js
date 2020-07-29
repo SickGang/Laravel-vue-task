@@ -1997,6 +1997,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _DepartamentWorker_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DepartamentWorker.vue */ "./resources/js/components/DepartamentWorker.vue");
 //
 //
 //
@@ -2020,11 +2021,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['depat'],
   data: function data() {
-    return {};
+    return {
+      departament: null
+    };
   },
-  methods: {}
+  methods: {
+    deleteDepartament: function deleteDepartament() {
+      this.departament = this.depat;
+
+      if (this.departament.departament_name) {
+        this.$emit('deleteDep', this.departament.id);
+      } else {
+        this.$parent.$children[0].deleteWorker(this.departament.id);
+      }
+    }
+  },
+  components: {
+    departamentworker: _DepartamentWorker_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  }
 });
 
 /***/ }),
@@ -2090,16 +2111,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       departaments: [],
-      departament: {
-        id: '',
-        departament_name: ''
-      },
+      depot: null,
       worker: {
         worker_name: []
       },
@@ -2112,6 +2137,12 @@ __webpack_require__.r(__webpack_exports__);
     this.getDepartaments();
   },
   methods: {
+    deleteWorker: function deleteWorker(worker) {
+      this.depot = worker;
+    },
+    closeModal: function closeModal() {
+      this.depot = null;
+    },
     getDepartaments: function getDepartaments() {
       var _this = this;
 
@@ -2126,6 +2157,7 @@ __webpack_require__.r(__webpack_exports__);
     deleteDepartament: function deleteDepartament(id) {
       var _this2 = this;
 
+      this.closeModal();
       axios["delete"]("/api/departaments/".concat(id)).then(function (response) {
         _this2.getDepartaments();
       })["catch"](function (error) {
@@ -2229,16 +2261,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['departamentId'],
   data: function data() {
     return {
       workers: [],
-      worker: {
-        id: '',
-        worker_name: '',
-        departamentd_id: ''
-      },
       loading: true,
       edit: false
     };
@@ -2265,6 +2295,7 @@ __webpack_require__.r(__webpack_exports__);
     deleteWorker: function deleteWorker(id) {
       var _this2 = this;
 
+      this.$emit('closeModal');
       axios["delete"]("/api/workers/".concat(id)).then(function (response) {
         _this2.$emit('render');
       })["catch"](function (error) {
@@ -38772,68 +38803,64 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    { staticClass: "modal", attrs: { tabindex: "-1", role: "dialog" } },
+    [
+      _c("div", { staticClass: "modal-dialog", attrs: { role: "document" } }, [
+        _c("div", { staticClass: "modal-content" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "modal-body" }, [
+            _c("p", [
+              _vm._v(
+                "Вы точно хотите удалить: " +
+                  _vm._s(_vm.depat.departament_name) +
+                  " " +
+                  _vm._s(_vm.depat.worker_name) +
+                  "? "
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "modal-footer" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                attrs: { type: "button" },
+                on: { click: _vm.deleteDepartament }
+              },
+              [_vm._v("\n                        Удалить")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-secondary",
+                attrs: { type: "button", "data-dismiss": "modal" },
+                on: {
+                  click: function($event) {
+                    return _vm.$emit("close")
+                  }
+                }
+              },
+              [_vm._v("\n                        Закрыть")]
+            )
+          ])
+        ])
+      ])
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "modal", attrs: { tabindex: "-1", role: "dialog" } },
-      [
-        _c(
-          "div",
-          { staticClass: "modal-dialog", attrs: { role: "document" } },
-          [
-            _c("div", { staticClass: "modal-content" }, [
-              _c("div", { staticClass: "modal-header" }, [
-                _c("h5", { staticClass: "modal-title" }, [_vm._v("Удаление")]),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "close",
-                    attrs: {
-                      type: "button",
-                      "data-dismiss": "modal",
-                      "aria-label": "Close"
-                    }
-                  },
-                  [
-                    _c("span", { attrs: { "aria-hidden": "true" } }, [
-                      _vm._v("×")
-                    ])
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "modal-body" }, [
-                _c("p", [_vm._v("Вы точно хотите удалить отдел/сотрудника?")])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "modal-footer" }, [
-                _c(
-                  "button",
-                  { staticClass: "btn btn-primary", attrs: { type: "button" } },
-                  [_vm._v("Удалить")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-secondary",
-                    attrs: { type: "button", "data-dismiss": "modal" }
-                  },
-                  [_vm._v("Закрыть")]
-                )
-              ])
-            ])
-          ]
-        )
-      ]
-    )
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", { staticClass: "modal-title" }, [_vm._v("Удаление")])
+    ])
   }
 ]
 render._withStripped = true
@@ -38945,7 +38972,7 @@ var render = function() {
                           attrs: { type: "button" },
                           on: {
                             click: function($event) {
-                              return _vm.deleteDepartament(departament.id)
+                              _vm.depot = departament
                             }
                           }
                         },
@@ -38960,7 +38987,11 @@ var render = function() {
                           departamentId: departament.id,
                           renderComponent: _vm.renderComponent
                         },
-                        on: { render: _vm.renderComponentMethod }
+                        on: {
+                          render: _vm.renderComponentMethod,
+                          deleteWorkerId: _vm.deleteWorker,
+                          closeModal: _vm.closeModal
+                        }
                       })
                     : _vm._e(),
                   _vm._v(" "),
@@ -39030,7 +39061,19 @@ var render = function() {
                 1
               )
             ])
+          }),
+      _vm._v(" "),
+      _vm.depot
+        ? _c("deletemodal", {
+            attrs: { depat: _vm.depot },
+            on: {
+              deleteDep: _vm.deleteDepartament,
+              close: function($event) {
+                _vm.depot = null
+              }
+            }
           })
+        : _vm._e()
     ],
     2
   )
@@ -39146,7 +39189,7 @@ var render = function() {
                       attrs: { type: "button" },
                       on: {
                         click: function($event) {
-                          return _vm.deleteWorker(worker.id)
+                          return _vm.$emit("deleteWorkerId", worker)
                         }
                       }
                     },
